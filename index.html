@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIP Calculator</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+  <div id="app" class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="bg-white p-8 rounded-lg shadow-lg">
+      <h1 class="text-2xl font-bold mb-4">SIP Calculator</h1>
+      <div class="mb-4">
+        <label for="monthlyInvestment" class="block text-gray-700 font-semibold mb-2">Monthly Investment Amount</label>
+        <input v-model="monthlyInvestment" type="number" id="monthlyInvestment" class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
+      </div>
+      <div class="mb-4">
+        <label for="rateOfReturn" class="block text-gray-700 font-semibold mb-2">Expected Rate of Return (%)</label>
+        <input v-model="rateOfReturn" type="number" id="rateOfReturn" class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
+      </div>
+      <div class="mb-4">
+        <label for="timePeriod" class="block text-gray-700 font-semibold mb-2">Time Period (Years)</label>
+        <input v-model="timePeriod" type="number" id="timePeriod" class="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200">
+      </div>
+      <button @click="calculate" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg">Calculate</button>
+      <div class="mt-4" v-if="showResult">
+        <p class="text-green-700 font-semibold mt-2">Invested Amount: {{ investedAmount }}</p>
+        <p class="text-green-700 font-semibold mt-2">Estimated Returns: {{ estimatedReturns }}</p>
+        <p class="text-green-700 font-semibold mt-2">Total Value: {{ totalValue }}</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        monthlyInvestment: 0,
+        rateOfReturn: 0,
+        timePeriod: 0,
+        showResult: false,
+        investedAmount: 0,
+        estimatedReturns: 0,
+        totalValue: 0,
+      },
+      methods: {
+        calculate() {
+          const monthlyInvestment = parseFloat(this.monthlyInvestment);
+          const rateOfReturn = parseFloat(this.rateOfReturn);
+          const timePeriod = parseFloat(this.timePeriod);
+          const totalMonths = timePeriod * 12;
+
+          this.investedAmount = monthlyInvestment * totalMonths;
+
+          const returnsPercentage = (1 + rateOfReturn / 100) ** totalMonths - 1;
+          this.estimatedReturns = monthlyInvestment * returnsPercentage / (rateOfReturn / 100);
+
+          this.totalValue = this.investedAmount + this.estimatedReturns;
+
+          this.showResult = true;
+        },
+      },
+    });
+  </script>
+</body>
+</html>
